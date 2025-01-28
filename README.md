@@ -21,7 +21,7 @@ To run this keylogger, you need:
 1. git clone https://github.com/SoBatistaCyber-Dev/keylogger.git
 2. cd keylogger
 3. python3 keylogger.py
-4. View the logged keystrokes in the file named **keystrokes_saved.txt**
+4. View the logged keystrokes in the file named **keylogs_received.txt**
 
 ### NOTE: 
 This code is currently **under maintenance**! It works but can and will be improved!
