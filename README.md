@@ -24,4 +24,4 @@ To run this keylogger, you need:
 4. View the logged keystrokes in the file named **keystrokes_saved.txt**
 
 ### NOTE: 
-This code is currently **under maintenance** and may not be ready to use!
+This code is currently **under maintenance**! It works but can and will be improved!

