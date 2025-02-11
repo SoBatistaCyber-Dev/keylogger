@@ -29,7 +29,7 @@ To run this keylogger, you need:
 ---
 
 ## Usage Instructions (Windows)
-git clone https://github.com/SoBatistaCyber-Dev/keylogger.git
+1. git clone https://github.com/SoBatistaCyber-Dev/keylogger.git
 2. cd keylogger
 3. python server.py
 3. python keylogger.py
